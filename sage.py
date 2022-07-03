@@ -93,7 +93,7 @@ class Sage:
     def searchInGoogleEngine(self, query:str):
         query = query + " wikidot"
         #for first_http_adress in search(query, tld="co.in", num=1, stop=1, pause=2):
-        for first_http_adress in search(query, "co.in", 1, 1, 2):
+        for first_http_adress in search(query):
             return first_http_adress
 
 

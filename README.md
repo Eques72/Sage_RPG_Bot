@@ -25,10 +25,6 @@ If command has <optional flags> argument you can use flags bellow:
 "-s" <phrase> - use this flag with !dndclass only, lets you see certain subclass/maneuvers/invocations, depending on phrase you have given. Eg: !dndclass rouge -s arcane trickster | It will show you info about rouge subclass - arcane trickster
 "-f" <phrase> - use with any command where optional flags are awalible, bot will look for phrase you have given and will display only this content that is relevant to this phrase. Eg: !dndsage elf -f wood elf | It will show you only information about wood elf, not whole elf race. Eg2: !dndsage paladin -f divine smite | It will show you only Divine Smite feature, not whole paladin class 
 
-# TO DO LIST:
->spread table
 
-@bot.command()
-async def dndspell(ctx):
-    """Documentation presumably"""
-    //code
+## Invitation link:
+https://discord.com/api/oauth2/authorize?client_id=986263052108324904&permissions=277025778688&scope=bot

@@ -1,4 +1,3 @@
-from copy import copy
 import requests
 import re
 from googlesearch import search

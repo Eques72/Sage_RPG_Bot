@@ -1,0 +1,9 @@
+nextcord
+python-dotenv
+requests
+re
+googlesearch
+typing
+xmlrpc.client
+pandas
+os

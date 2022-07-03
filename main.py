@@ -1,4 +1,3 @@
-from operator import length_hint
 from questionHandler import questionHandler
 from nextcord.ext import commands
 import nextcord

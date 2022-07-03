@@ -4,4 +4,3 @@ requests
 regex
 googlesearch-python
 pandas
-os

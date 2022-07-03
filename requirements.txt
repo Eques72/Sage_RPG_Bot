@@ -2,8 +2,6 @@ nextcord
 python-dotenv
 requests
 regex
-googlesearch
-typing
-xmlrpc.client
+googlesearch-python
 pandas
 os

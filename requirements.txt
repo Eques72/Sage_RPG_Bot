@@ -1,7 +1,7 @@
 nextcord
 python-dotenv
 requests
-re
+regex
 googlesearch
 typing
 xmlrpc.client

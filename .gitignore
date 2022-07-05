@@ -1,7 +1,6 @@
 /.env
 /.google-cookie
-/botManager.py
-/kopiaKodu2.7.22
+/AdditionalDevFiles
 /testMain.py
 /__pycache__
-/todoList.txt
+/.vscode

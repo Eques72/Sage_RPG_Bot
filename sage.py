@@ -54,12 +54,15 @@ class Sage:
         elif count > 10:
             findingsList.append("**Unfortunately, there was to many matches for your search, try to specify your search a little bit more**")
         else:
+            allPositions = [] #to ensure unique resoults
             for pF in positionsFound:
                 posAn = source_str.rfind(anchor,0,pF.start())
                 posAnEnd = source_str.find(anchor,pF.start())
-                finding = source_str[posAn:posAnEnd]
-                finding = re.sub(phrase, "__"+pF.group(0)+"__",finding,0,re.I)
-                findingsList.append(finding)
+                if (posAn, posAnEnd) not in allPositions:
+                    allPositions.append((posAn, posAnEnd))
+                    finding = source_str[posAn:posAnEnd]
+                    finding = re.sub(phrase, "__"+pF.group(0)+"__",finding,0,re.I)
+                    findingsList.append(finding)
 
         return findingsList
 
@@ -146,7 +149,7 @@ class Sage:
             cuttedTab = tx[posTable.start():] + tx[:posTable.end()]                 
             tx = tx[:posTable.start()] + tx[posTable.end():] 
             #cuttedTab = tablemaker...   make table biutiful
-            cuttedTab = "\n\n```" +  tableMaker.createUnicodeTable(cuttedTab) + "```\n\n" 
+            cuttedTab = "\n\n```fix\n" +  tableMaker.createUnicodeTable(cuttedTab) + "```\n\n" 
             tx = tx[:posTable.start()] + cuttedTab + tx[posTable.start() + 1:] #SUS should be start + tab+ start i think
             #put in right position of the tx a new butiful table
             posTable = re.search(regTab, tx)

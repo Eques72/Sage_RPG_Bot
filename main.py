@@ -20,7 +20,7 @@ def splitMessage(mes: str):
             mes = mes[pos:] 
         else:
             mes_list.append(mes[0:pos]+"```")
-            mes = "```" + mes[pos:]
+            mes = "```fix\n" + mes[pos:]
 
     mes_list.append(mes)
 

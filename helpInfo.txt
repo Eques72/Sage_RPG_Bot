@@ -1,4 +1,7 @@
 ```ini
+This bot allows you to display DnD related info in your DC chat. 
+Topic it covers include: rules, items, classes and features, races, spells, backgrounds, feats.
+
 [Write any of these commands below to ask your wise Sage a question about D&D mechanics
 
 COMMANDS:
@@ -10,13 +13,12 @@ COMMANDS:
 "!dndfeat       <feat name> "
 "!dndbackground <background name> "
 
-ARGUMENTS
+ARGUMENTS:
 Instead of brackets in list above enter according phrases you wish to see. 
 Eg: Instead of: !dndfeat <feat name> write !dndfeat Chef or !dndfeat chef or any feat name, do similar with other commands
 
-!DNDSAGE
-Unique and universal command, it has the ability to find answers for most of your question (about rules too!), 
-but there is bigger chance that it will be inaccurate. In opposition to other commands you can make misspell mistakes
+!DNDSAGE:
+Unique and universal command, it has the ability to find answers for most of your questios, but there is bigger chance that it will take sligthly longer to execute. In opposition to other commands you can make misspell mistakes.
 Eg: !dndsage tiefling Eg2: !dndsage armor -f shield Eg3: !dndsage fight -f mounting
 
 FLAGS:
@@ -25,6 +27,7 @@ If command has <optional flags> argument you can use flags bellow:
 "-s <phrase>" - use this flag with !dndclass only, lets you see certain subclass/maneuvers/invocations, 
 depending on phrase you have given. 
 Eg: !dndclass rogue -s arcane trickster | It will show you info about rogue subclass - arcane trickster
+
 "-f <phrase>" - use with any command where optional flags are available, bot will look for phrase you have given
  and will display only this content that is relevant to this phrase. 
  Eg: !dndsage elf -f wood elf | It will show you only information about wood elf, not whole elf race. 

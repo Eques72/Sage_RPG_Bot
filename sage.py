@@ -72,6 +72,7 @@ class Sage:
 
     def askSearchQuestion(self, question:str, searchPhrase:str):
         adress = self.searchInGoogleEngine(question)
+        
         response = self.getHttp(adress,"")
 
         if(response.status_code == 200):
@@ -96,7 +97,9 @@ class Sage:
     def searchInGoogleEngine(self, query:str):
         query = query + " wikidot"
         #for first_http_adress in search(query, tld="co.in", num=1, stop=1, pause=2):
-        for first_http_adress in search(query):
+        #int: num_results=10, str: lang="en"
+        # for first_http_adress in search(query, 1, 'en'):
+        for first_http_adress in search(query, tld="co.in", num=1, stop=1, pause=3):
             return first_http_adress
 
 

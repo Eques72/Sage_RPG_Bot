@@ -2,6 +2,7 @@ nextcord
 python-dotenv
 requests
 regex
-googlesearch-python
+beautifulsoup4
+google
 pandas
 lxml

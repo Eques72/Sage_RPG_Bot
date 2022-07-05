@@ -14,12 +14,12 @@ https://discord.com/api/oauth2/authorize?client_id=986263052108324904&permission
 # Usage:
 ## COMMANDS:
 - "!dndhelp" - command used to show this panel
-- "!dndsage <any  phrase  you  want  to  search  for> <optional  flags>" - see more below
+- "!dndsage \<any  phrase  you  want  to  search  for> <optional  flags>" - see more below
 - "!dndclass \<class  name>\<optional  flags>"
 - "!dndrace \<race  name> \<optional  flags>"
 - "!dndspell \<spell  name> "
 - "!dndfeat \<feat  name> "
-- "!dndbackground <background  name> "
+- "!dndbackground \<background  name> "
 ### ARGUMENTS
 Instead of brackets in list above enter according phrases you wish to see.
 
@@ -36,7 +36,7 @@ Unique and universal command, it has the ability to find answers for most of you
   
 ## FLAGS:
 
-> If command has <optional  flags> argument you can use flags bellow:
+> If command has \<optional  flags> argument you can use flags bellow:
 
 - "-s \<phrase>" - use this flag with !dndclass only, lets you see certain
 subclass/maneuvers/invocations, depending on phrase you have given.

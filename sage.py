@@ -1,3 +1,4 @@
+from difflib import Match
 import requests
 import re
 from googlesearch import search
@@ -133,9 +134,14 @@ class Sage:
         title = self.getTitle(textHtml)
 
         #cut out everything after interesting part
-        pos = tx.find('<!-- wikidot_bottom')
-        if pos != -1: 
-            tx = tx[:pos]
+        # pos = tx.find('<!-- wikidot_bottom')
+        pos = re.search("<div id=\"wad-dnd5e-below-content\"", tx)
+        if pos:
+            tx = tx[:pos.start()]
+        else:         
+            pos = re.search("<[\w\d\s=,\"-]*footer", tx)
+            if pos:
+                tx = tx[:pos.start()]
 
         #remove all empty lines
         tx = "".join([s for s in tx.strip().splitlines(True) if s.strip()])

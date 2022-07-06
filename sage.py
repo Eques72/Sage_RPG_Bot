@@ -16,6 +16,7 @@ class Sage:
         response = self.getHttp(self.wiki_adress, questionCategory + ":" + question)
         if(response.status_code == 200):
             response = self.cutOutInfo(response.text)
+            response += ( "Source: " + self.wiki_adress + questionCategory + ":" + question )
         else:
             response = self.getFailAnswer('Error code ' + str(response.status_code))
 
@@ -34,6 +35,7 @@ class Sage:
                 for rP in respParts:
                     response += "***Match found no."+str(index)+":***\n" + self.cutOutInfo(rP) + "\n\n"
                     index += 1
+            response += ( "Source: " + self.wiki_adress + questionCategory + ":" + question )
         else:
             response =  self.getFailAnswer('Error code ' + str(response.status_code))
 
@@ -85,7 +87,8 @@ class Sage:
                 index = 1
                 for rP in respParts:
                     response += "***Match found no."+str(index)+":***\n" + self.cutOutInfo(rP) + "\n\n"
-                    index += 1   
+                    index += 1  
+            response += ( "Source: " + adress)
         else:
             response = ('There is nothing like this in my all-knowing book! ( error code: ' + str(response.status_code) + ')')
 

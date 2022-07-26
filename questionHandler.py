@@ -3,79 +3,91 @@ from xmlrpc.client import boolean
 
 class QuestionHandler:
 
+    __questionTypes = ["SIMPLE","DEEP","SEARCH","HELP"]
+    __failAnswers = ["Search phrase after \"-f\" flag is too short", "File missing","Command unknown"]
+    __helpFileName = "helpInfo.txt"
+
     def __init__(self):
         pass
 
-    def handleQuestion(self, question : str, clientStatus : str):
+    def handleQuestion(self, question : str, questionCategory : str, clientStatus : str):
         s = sage.Sage(clientStatus)      
+        
         question = question.lower()
-        interpretedQuestion = self.interpreteQuestions(question) 
+        interpretationResoults = self.interpreteQuestions(question, questionCategory) 
 
         answer = ""
-        if(interpretedQuestion[3] == "simple"):
-            answer = s.askQuestion(interpretedQuestion[0],interpretedQuestion[1])     
-        elif(interpretedQuestion[3] == "deep"):
-            if len(interpretedQuestion[2]) < 3 and len(interpretedQuestion[2]) != 0:
-                answer = s.getFailAnswer("Search phrase after \"-f\" flag is too short")
+        if(interpretationResoults[3] == QuestionHandler.__questionTypes[0]):
+            answer = s.askQuestion(interpretationResoults[0],interpretationResoults[1])     
+
+        elif(interpretationResoults[3] == QuestionHandler.__questionTypes[1]):
+            if len(interpretationResoults[2]) < 3 and len(interpretationResoults[2]) != 0:
+                answer = s.getFailAnswer(QuestionHandler.__failAnswers[0])
             else:
-                answer = s.askExpandedQuestion(interpretedQuestion[0],interpretedQuestion[1],interpretedQuestion[2])
-        elif(interpretedQuestion[3] == "search"):
-            if len(interpretedQuestion[2]) < 3 and len(interpretedQuestion[2]) != 0:
-                answer = s.getFailAnswer("Search phrase after \"-f\" flag is too short")
+                answer = s.askExpandedQuestion(interpretationResoults[0],interpretationResoults[1],interpretationResoults[2])
+
+        elif(interpretationResoults[3] == QuestionHandler.__questionTypes[2]):
+            if len(interpretationResoults[2]) < 3 and len(interpretationResoults[2]) != 0:
+                answer = s.getFailAnswer(QuestionHandler.__failAnswers[0])
             else:
-                answer = s.askSearchQuestion(interpretedQuestion[1], interpretedQuestion[2])
-        elif(interpretedQuestion[3] == "help"):
-            f = open("helpInfo.txt", "r")
+                answer = s.askSearchQuestion(interpretationResoults[1], interpretationResoults[2])
+
+        elif(interpretationResoults[3] == QuestionHandler.__questionTypes[3]):
+            f = open(QuestionHandler.__helpFileName, "r")
             if f.readable:
                 answer = f.read()
             else:
-                answer = s.getFailAnswer("File missing")
+                answer = s.getFailAnswer(QuestionHandler.__failAnswers[1])
             f.close()
+
         else:
-            answer = s.getFailAnswer("Command unknown")
+            answer = s.getFailAnswer(QuestionHandler.__failAnswers[2])
+
         return answer
    
 
-    def interpreteQuestions(self, question : str):
+    def interpreteQuestions(self, question : str, questionCategory : str):
         prefix = ""
         postfix = ""
         searchText = ""
-        type = "" #default if simple search, deep if feature for class, diferent for search
-        data = ()
+        type = ""
+        data = ("","")
 
-        if(question.startswith("!dndspell")): #simple no flags
+        if(questionCategory == "SPELL"): #simple no flags
             prefix = "spell"
-            type = "simple"
+            type = QuestionHandler.__questionTypes[0]
             data = self.formQuestion(question, 0)
-        elif(question.startswith("!dndfeat")): #simple no flags
+
+        elif(questionCategory == "FEAT"): #simple no flags
             prefix = "feat"
-            type = "simple"
+            type = QuestionHandler.__questionTypes[0]
             data = self.formQuestion(question, 0)
-     #sage is used to search 
-        elif(question.startswith("!dndsage")): #difereent flags
+
+        #sage is used to search 
+        elif(questionCategory == "SAGE"): #search, with/without flags
             prefix = "sage"
-            type = "search"
+            type = QuestionHandler.__questionTypes[2]
             data = self.formQuestion(question, 1) 
-     #use extra flag -f to search for specific ability 
-     #use flag -s for subclass info eg artificer:armorer will be !dndclass artificer -s armorer
-        elif(question.startswith("!dndclass")): #deep flags        
+     
+        elif(questionCategory == "CLASS"): #deep flags        
             prefix = ""
-            type = "deep"
+            type = QuestionHandler.__questionTypes[1]
             data = self.formQuestion(question, 1)
-     #use extra flag -f to search for specific ability 
-        elif(question.startswith("!dndrace")): #deep flags
+     
+        elif(questionCategory == "RACE"): #deep flags
             prefix = "" 
-            type = "deep"
+            type = QuestionHandler.__questionTypes[1]
             data = self.formQuestion(question, 1)
-        elif(question.startswith("!dndbackground")): #simple no flags
+
+        elif(questionCategory == "BACKGROUND"): #simple no flags
             prefix = "background" 
-            type = "simple"
+            type = QuestionHandler.__questionTypes[0]
             data = self.formQuestion(question, 0)
-        elif(question.startswith("!dndhelp")): #simple no flags
-            type = "help"
+
+        elif(questionCategory == "HELP"): #simple no flags
+            type = QuestionHandler.__questionTypes[3]
             data = ("", "")
-        else:
-            data = ("", "")
+
         postfix = data[0]
         searchText = data[1]
 

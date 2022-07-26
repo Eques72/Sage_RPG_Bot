@@ -3,18 +3,20 @@ import re
 
 
 class TableMaker:
-    def __init__(self, clientStatus: str) -> None:
-        self.clientStatus = clientStatus
-        self.MAX_WIDTH = 87 #80
-        self.SPEC_WIDTHS = {
+
+
+    __HORIZONTAL_CHAR = '═'
+    __VERTICAL_CHAR = '║'
+    __CROSS_CHAR = '╬'
+    __SPEC_WIDTHS = {
         "DESKTOP": 87,
         "WEB": 82,
         "MOBILE": 42
         }
 
-        self.HORIZONTAL_CHAR = '═'
-        self.VERTICAL_CHAR = '║'
-        self.CROSS_CHAR = '╬'
+    def __init__(self, clientStatus: str) -> None:
+        self.clientStatus = clientStatus
+        self.MAX_WIDTH = TableMaker.__SPEC_WIDTHS[self.clientStatus]
         pass 
 
     #use only for multiindex
@@ -44,8 +46,18 @@ class TableMaker:
         separoators = 2 + length - 1
         cell_size = (self.MAX_WIDTH-separoators-((self.MAX_WIDTH-separoators)%separoators)) / length
         cell_size = int(cell_size)
-        return cell_size
+        rest = self.MAX_WIDTH - length*cell_size - separoators
 
+        sizes = []
+        for i in range(0,length):
+            if i == length - 1:
+                sizes.append(cell_size + rest)
+            else:
+                sizes.append(cell_size)
+        return sizes
+
+    #calsulates witth of every collumn basen on amount of text in each collumn. Size can't be 
+    #smaller than 2 
     def calculateOptimalCellSize(self, cells, headers):
         col_lengths = [0] * len(cells[0])
         sum_len = 0
@@ -77,8 +89,6 @@ class TableMaker:
                 tmp = max(cells_size)
                 cells_size[cells_size.index(tmp)] -= difference
 
-        # if sum_cells_size < max_space_4_cells:
-        #     cells_size[len(cells_size)-1] += max_space_4_cells - sum_cells_size
         while sum_cells_size < max_space_4_cells:
             for i in range(0, ((max_space_4_cells - sum_cells_size) % len(cells_size))):
                 cells_size[i] += 1
@@ -93,11 +103,12 @@ class TableMaker:
 
     def makeHorizontalEdge(self, cells_amount:int, cell_sizes, target_str:str):
         for i in range(0,cells_amount):       #+----------+---------+--------+
-            target_str += self.CROSS_CHAR
+            target_str += TableMaker.__CROSS_CHAR
             for j in range(0, cell_sizes[i]):
-                target_str += self.HORIZONTAL_CHAR
-        target_str += self.CROSS_CHAR + '\n'
+                target_str += TableMaker.__HORIZONTAL_CHAR
+        target_str += TableMaker.__CROSS_CHAR + '\n'
         return target_str
+
 
     def makeRowContent(self, row, cell_sizes, target_str:str):
         multiline_content = []
@@ -122,12 +133,12 @@ class TableMaker:
         #creates actual row of the table
         for i in range(0,max_heigth):
             for j in range(0,len(multiline_content)):
-                target_str += self.VERTICAL_CHAR
+                target_str += TableMaker.__VERTICAL_CHAR
                 if(len(multiline_content[j])-1 >= i):
                     target_str += multiline_content[j][i]
                 else:
                     target_str += (" " * cell_sizes[j])
-            target_str += self.VERTICAL_CHAR + '\n'
+            target_str += TableMaker.__VERTICAL_CHAR + '\n'
         
         return target_str
 
@@ -136,8 +147,6 @@ class TableMaker:
     def createUnicodeTable(self, content:str):
         data = pd.read_html(content)[0]
         data4Cells = data.values
-
-        self.MAX_WIDTH = self.SPEC_WIDTHS[self.clientStatus]
 
         data.rename(columns=lambda x: re.sub('Unnamed:[\w\s\d_]+','--',x),inplace = True)
         #convets every value to string
@@ -148,8 +157,6 @@ class TableMaker:
                 else:
                     data4Cells[c][i] = str(data4Cells[c][i])
                 data4Cells[c][i] = re.sub("^nan$", "-",data4Cells[c][i])
-
-
 
         cells_sizes = self.calculateOptimalCellSize(data4Cells, data.columns.values)
 
@@ -164,18 +171,13 @@ class TableMaker:
             else:
                 uni_table = self.makeTablePart(data4Cells[c],cells_sizes,False, uni_table)
         
-
         return uni_table    
     
 
     def makeTablePart(self, row, cells_sizes, isEnding:bool, targetTable:str):
         
         if len(cells_sizes) != len(row):
-            cell_size = self.calculateCellSize(len(row))
-            tmp_sizes = []
-            for i in range(0,len(row)):
-                tmp_sizes.append(cell_size)
-            cells_sizes = tmp_sizes
+            cells_sizes = self.calculateCellSize(len(row))
 
         tablePart = ""
     
@@ -185,6 +187,7 @@ class TableMaker:
         if(isEnding):
             tablePart = self.makeHorizontalEdge(len(row), cells_sizes, tablePart)            
         return targetTable + tablePart
+
 
     def createTableHeadForIndex(self,cells_sizes, data):
         col = data.columns.values

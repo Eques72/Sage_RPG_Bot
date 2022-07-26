@@ -6,44 +6,74 @@ import tableMaker as tM
 
 class Sage:
     
+    __searchPhraseBase = " wikidot dnd"
+    __wikiWebAdress = "http://dnd5e.wikidot.com/"
+    __failAnswers = ["Error code:", "**Unfortunately, there was no matches for your search**", "**Unfortunately, there was to many matches for your search, try to specify your search a little bit more**"]
+
     def __init__(self, clientStatus : str):
         self.clientStatus = clientStatus
-        self.wiki_adress = "http://dnd5e.wikidot.com/"
         pass
 
+
     def askQuestion(self,questionCategory:str, question:str):
-        response = self.getHttp(self.wiki_adress, questionCategory + ":" + question)
+        response = self.getHttp(Sage.__wikiWebAdress, questionCategory + ":" + question)
+
         if(response.status_code == 200):
-            response = self.cutOutInfo(response.text)
-            response += ( "Source: " + self.wiki_adress + questionCategory + ":" + question )
+            response = self.preprareAnswer(response.text)
+            response += ( "Source: " + Sage.__wikiWebAdress + questionCategory + ":" + question )
         else:
-            response = self.getFailAnswer('Error code ' + str(response.status_code))
+            response = self.getFailAnswer(Sage.__failAnswers[0] + str(response.status_code))
 
         return response
 
-    def askExpandedQuestion(self,questionCategory:str, question:str, searchPhrase:str):
-        response = self.getHttp(self.wiki_adress ,questionCategory + ":" + question)
 
-        if(response.status_code == 200):
+    def askExpandedQuestion(self,questionCategory:str, question:str, searchPhrase:str):
+        response = self.getHttp(Sage.__wikiWebAdress ,questionCategory + ":" + question)
+
+        return self.deepQuestionProcess(response, searchPhrase)
+
+
+    def askSearchQuestion(self, question:str, searchPhrase:str):
+        adress = self.searchInGoogleEngine(question)
+        response = self.getHttp(adress,"")
+
+        return self.deepQuestionProcess(response, searchPhrase)
+
+
+    def deepQuestionProcess(self, response: str, searchPhrase:str):
+        url = response.url
+        if(response.status_code == 200 and url.find("wikidot") != -1):
             if(searchPhrase == ""):
-                response = self.cutOutInfo(response.text)
+                response = self.preprareAnswer(response.text)
             else:
                 respParts = self.findOccuernces(searchPhrase,response.text)
                 response = ""
                 index = 1
                 for rP in respParts:
-                    response += "***Match found no."+str(index)+":***\n" + self.cutOutInfo(rP) + "\n\n"
-                    index += 1
-            response += ( "Source: " + self.wiki_adress + questionCategory + ":" + question )
+                    response += "***Match found no."+str(index)+":***\n" + self.preprareAnswer(rP) + "\n\n"
+                    index += 1  
+            response += ( "Source: " + url )
+
         else:
-            response =  self.getFailAnswer('Error code ' + str(response.status_code))
+            response = self.getFailAnswer(Sage.__failAnswers[0] + str(response.status_code))
 
         return response
+
+
+    def getHttp(self,adress:str, subadress:str):  
+        y = requests.get(adress + subadress)
+        return y
+
+
+    def searchInGoogleEngine(self, query:str):
+        query = query + Sage.__searchPhraseBase
+        for first_http_adress in search(query, tld="co.in", num=1, stop=1, pause=3):
+            return first_http_adress
+
 
     def findOccuernces(self, phrase:str, source_str:str) -> List[str]:
         findingsList = []
         anchor = '<h'
-
         positionsFound = re.finditer(phrase,source_str,re.I)        
         
         pF_Copy = re.finditer(phrase,source_str,re.I)
@@ -52,14 +82,15 @@ class Sage:
             count +=1
 
         if count == 0:
-            findingsList.append("**Unfortunately, there was no matches for your search**")
+            findingsList.append(self.getFailAnswer(Sage.__failAnswers[1]))
         elif count > 10:
-            findingsList.append("**Unfortunately, there was to many matches for your search, try to specify your search a little bit more**")
+            findingsList.append(Sage.__failAnswers[2])
         else:
             allPositions = [] #to ensure unique resoults
             for pF in positionsFound:
                 posAn = source_str.rfind(anchor,0,pF.start())
                 posAnEnd = source_str.find(anchor,pF.start())
+                
                 if (posAn, posAnEnd) not in allPositions:
                     allPositions.append((posAn, posAnEnd))
                     finding = source_str[posAn:posAnEnd]
@@ -68,42 +99,9 @@ class Sage:
 
         return findingsList
 
+
     def getFailAnswer(self, reason='404'):
-        return ('There is nothing like this in my all-knowing book! ( Reason: ' + reason + ' )')
-
-
-    def askSearchQuestion(self, question:str, searchPhrase:str):
-        adress = self.searchInGoogleEngine(question)
-        
-        response = self.getHttp(adress,"")
-
-        if(response.status_code == 200):
-            if(searchPhrase == ""):
-                response = self.cutOutInfo(response.text)
-            else:
-                respParts = self.findOccuernces(searchPhrase,response.text)
-                response = ""
-                index = 1
-                for rP in respParts:
-                    response += "***Match found no."+str(index)+":***\n" + self.cutOutInfo(rP) + "\n\n"
-                    index += 1  
-            response += ( "Source: " + adress)
-        else:
-            response = ('There is nothing like this in my all-knowing book! ( error code: ' + str(response.status_code) + ')')
-
-        return response
-
-    def getHttp(self,adress:str, subadress:str):  
-        y = requests.get(adress + subadress)
-        return y
-
-    def searchInGoogleEngine(self, query:str):
-        query = query + " wikidot"
-        #for first_http_adress in search(query, tld="co.in", num=1, stop=1, pause=2):
-        #int: num_results=10, str: lang="en"
-        # for first_http_adress in search(query, 1, 'en'):
-        for first_http_adress in search(query, tld="co.in", num=1, stop=1, pause=3):
-            return first_http_adress
+        return ('There is nothing like this in my all-knowing book! ( Reason:' + reason + ')')
 
 
     def getTitle(self, textHtml):
@@ -117,6 +115,7 @@ class Sage:
  
         return title
 
+
     def boldTextHeaders(self, text):
         regSpan = re.compile("((<span[\w\s\d=\"-:%;]*>)|(<\/span>))")
         
@@ -124,19 +123,16 @@ class Sage:
         return text
 
 
-    def cutOutInfo(self,textHtml):
+    def cutOutPortion(self, text):
         #cut out everything before interesting part
-        pos = textHtml.find('<div id="page-content">')
+        pos = text.find('<div id="page-content">')
         tx = ""
         if pos != -1: 
-            tx = textHtml[pos:]
+            tx = text[pos:]
         else:
-            tx = textHtml
-
-        title = self.getTitle(textHtml)
+            tx = text
 
         #cut out everything after interesting part
-        # pos = tx.find('<!-- wikidot_bottom')
         pos = re.search("<div id=\"wad-dnd5e-below-content\"", tx)
         if pos:
             tx = tx[:pos.start()]
@@ -144,38 +140,51 @@ class Sage:
             pos = re.search("<[\w\d\s=,\"-]*footer", tx)
             if pos:
                 tx = tx[:pos.start()]
+        return tx
 
-        #remove all empty lines
-        tx = "".join([s for s in tx.strip().splitlines(True) if s.strip()])
 
-        #search and edit tables
-        regTab = re.compile("<table[\w\d\s\n\W]+?<\/table>")         #"(<table)|(<\/table>)")
+    def findAndMakeTables(self, text : str):
+        #search and make tables
+        regTab = re.compile("<table[\w\d\s\n\W]+?<\/table>")
         
-        posTable = re.search(regTab, tx)
+        posTable = re.search(regTab, text)
         tMaker = None
         if(posTable):
             tMaker = tM.TableMaker(self.clientStatus)
         while(posTable):    
             #cut table form text and leave text without it
-            cuttedTab = tx[posTable.start():] + tx[:posTable.end()]                 
-            tx = tx[:posTable.start()] + tx[posTable.end():] 
-            #cuttedTab = tablemaker...   make table biutiful
+            cuttedTab = text[posTable.start():] + text[:posTable.end()]                 
+            text = text[:posTable.start()] + text[posTable.end():] 
+
+            #let table maker prepare a table and put it back in text
             cuttedTab = "\n\n```fix\n" +  tMaker.createUnicodeTable(cuttedTab) + "```\n\n" 
-            tx = tx[:posTable.start()] + cuttedTab + tx[posTable.start() + 1:] #SUS should be start + tab+ start i think
-            #put in right position of the tx a new butiful table
-            posTable = re.search(regTab, tx)
+            text = text[:posTable.start()] + cuttedTab + text[posTable.start() + 1:]
+           
+            #search for any others html tables
+            posTable = re.search(regTab, text)       
+        return text
+
+
+    def preprareAnswer(self,textHtml):
+        
+        tx = self.cutOutPortion(textHtml)
+        title = self.getTitle(textHtml)
+
+        #remove all empty lines
+        tx = "".join([s for s in tx.strip().splitlines(True) if s.strip()])
+
+        tx = self.findAndMakeTables(tx)
 
         tx = self.boldTextHeaders(tx)
 
         reg0 = re.compile("<\/p>")
-        #reg1 = re.compile('(<\w+>)|(<\/[\w\s\/]+>)|(<.+>)')
         reg1 = re.compile("<[\/\w\d\s\n\W]+?>")
         
         #relpace end-of-paragraph symbols with new line
         tx = re.sub(reg0, "\n", tx)
         #remove all html related syntax (<something>)
         tx = re.sub(reg1, "", tx)
-
+        #remove and reduce blocks of new-lines
         tx = re.sub('\n{3,}', '\n\n', tx)
 
         return (title + tx)

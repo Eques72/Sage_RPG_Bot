@@ -7,7 +7,8 @@ from nextcord.ext import commands
 ####=============================BOTSAGE CLASS====================================#####
 class BotSage(commands.Bot):
 
-    __statuses = ["DESKTOP", "MOBILE", "WEB"]
+    __statuses = ("DESKTOP", "MOBILE", "WEB")
+    commandType = ("SPELL","SAGE","BACKGROUND","RACE","CLASS","FEAT","HELP")
     __memberStatus = __statuses[0]
     
     def __init__(self):
@@ -15,8 +16,7 @@ class BotSage(commands.Bot):
         intents.members = True
         intents.message_content = True
         intents.presences = True
-        super().__init__(command_prefix='!', intents = intents, help_command=None)
-        
+        super().__init__(command_prefix=commands.when_mentioned_or('!'), intents = intents, help_command=None)
         self.qH = questionHandler.QuestionHandler()
 
     @staticmethod
@@ -58,6 +58,17 @@ class BotSage(commands.Bot):
 
         return mes_list
 
+    async def commandToMessage(self, ctx, category:str):
+        bot.checkMemberStatus(ctx.author)
+        reply_s = bot.qH.handleQuestion(ctx.message.content, category, BotSage.getMemberStatus())
+
+        if(len(reply_s) <= 2000):
+            await ctx.reply(reply_s)
+        else:
+            splited_mes = bot.splitMessage(reply_s)
+            for s in splited_mes:
+                await ctx.send(s)
+
 
 ####===============================BOT INITIALIZATION==================================#####
 dotenv.load_dotenv()
@@ -66,86 +77,31 @@ bot = BotSage()
 ####=============================ASYNC COMMANDS DEF====================================#####
 @bot.command()
 async def dndspell(ctx):
-    bot.checkMemberStatus(ctx.author)
-    reply_s = bot.qH.handleQuestion(ctx.message.content, BotSage.getMemberStatus())
-
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = bot.splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+    await bot.commandToMessage(ctx, BotSage.commandType[0])
 
 @bot.command()
 async def dndrace(ctx):   
-    bot.checkMemberStatus(ctx.author)
-    reply_s = bot.qH.handleQuestion(ctx.message.content, BotSage.getMemberStatus())
-
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = bot.splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+    await bot.commandToMessage(ctx,BotSage.commandType[3])
 
 @bot.command()
 async def dndbackground(ctx):
-    bot.checkMemberStatus(ctx.author)
-    reply_s = bot.qH.handleQuestion(ctx.message.content, BotSage.getMemberStatus())
-
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = bot.splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+    await bot.commandToMessage(ctx,BotSage.commandType[2])
 
 @bot.command()
 async def dndfeat(ctx):
-    bot.checkMemberStatus(ctx.author)
-    reply_s = bot.qH.handleQuestion(ctx.message.content, BotSage.getMemberStatus())
-
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = bot.splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+    await bot.commandToMessage(ctx,BotSage.commandType[5])
 
 @bot.command()
 async def dndclass(ctx):
-    bot.checkMemberStatus(ctx.author)
-    reply_s = bot.qH.handleQuestion(ctx.message.content, BotSage.getMemberStatus())
-
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = bot.splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+    await bot.commandToMessage(ctx,BotSage.commandType[4])
 
 @bot.command()
 async def dndsage(ctx):
-    bot.checkMemberStatus(ctx.author)
-    reply_s = bot.qH.handleQuestion(ctx.message.content, BotSage.getMemberStatus())
-
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = bot.splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+    await bot.commandToMessage(ctx,BotSage.commandType[1])
 
 @bot.command()
 async def dndhelp(ctx):
-    reply_s = bot.qH.handleQuestion(ctx.message.content, BotSage.getMemberStatus())
-
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = bot.splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+    await bot.commandToMessage(ctx,BotSage.commandType[6])
 
 ####===============================RUN METHOD==================================#####
 bot.run(os.getenv('TOKEN'))

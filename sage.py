@@ -1,14 +1,13 @@
-from difflib import Match
 import requests
 import re
 from googlesearch import search
 from typing import List
-
-from tableMaker import TableMaker
+import tableMaker as tM
 
 class Sage:
     
-    def __init__(self):
+    def __init__(self, clientStatus : str):
+        self.clientStatus = clientStatus
         self.wiki_adress = "http://dnd5e.wikidot.com/"
         pass
 
@@ -153,15 +152,15 @@ class Sage:
         regTab = re.compile("<table[\w\d\s\n\W]+?<\/table>")         #"(<table)|(<\/table>)")
         
         posTable = re.search(regTab, tx)
-        tableMaker = None
+        tMaker = None
         if(posTable):
-            tableMaker = TableMaker()
+            tMaker = tM.TableMaker(self.clientStatus)
         while(posTable):    
             #cut table form text and leave text without it
             cuttedTab = tx[posTable.start():] + tx[:posTable.end()]                 
             tx = tx[:posTable.start()] + tx[posTable.end():] 
             #cuttedTab = tablemaker...   make table biutiful
-            cuttedTab = "\n\n```fix\n" +  tableMaker.createUnicodeTable(cuttedTab) + "```\n\n" 
+            cuttedTab = "\n\n```fix\n" +  tMaker.createUnicodeTable(cuttedTab) + "```\n\n" 
             tx = tx[:posTable.start()] + cuttedTab + tx[posTable.start() + 1:] #SUS should be start + tab+ start i think
             #put in right position of the tx a new butiful table
             posTable = re.search(regTab, tx)

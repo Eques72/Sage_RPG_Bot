@@ -1,10 +1,17 @@
-from typing import List
 import pandas as pd
 import re
 
+
 class TableMaker:
-    def __init__(self) -> None:
+    def __init__(self, clientStatus: str) -> None:
+        self.clientStatus = clientStatus
         self.MAX_WIDTH = 87 #80
+        self.SPEC_WIDTHS = {
+        "DESKTOP": 87,
+        "WEB": 82,
+        "MOBILE": 42
+        }
+
         self.HORIZONTAL_CHAR = '═'
         self.VERTICAL_CHAR = '║'
         self.CROSS_CHAR = '╬'
@@ -129,6 +136,8 @@ class TableMaker:
     def createUnicodeTable(self, content:str):
         data = pd.read_html(content)[0]
         data4Cells = data.values
+
+        self.MAX_WIDTH = self.SPEC_WIDTHS[self.clientStatus]
 
         data.rename(columns=lambda x: re.sub('Unnamed:[\w\s\d_]+','--',x),inplace = True)
         #convets every value to string

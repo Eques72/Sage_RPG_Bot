@@ -1,8 +1,8 @@
 ```ini
-This bot allows you to display DnD related info in your DC chat. 
+[This bot allows you to display DnD related info in your DC chat. 
 Topic it covers include: rules, items, classes and features, races, spells, backgrounds, feats.
 
-[Write any of these commands below to ask your wise Sage a question about D&D mechanics
+Write any of these commands below to ask your wise Sage a question about D&D mechanics
 
 COMMANDS:
 "!dndhelp" - command used to show this panel

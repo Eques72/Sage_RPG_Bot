@@ -1,116 +1,130 @@
-from questionHandler import questionHandler
-from nextcord.ext import commands
-import nextcord
-import os
-from dotenv import load_dotenv
+# from questionHandler import questionHandler
+# from nextcord.ext import commands
+# import nextcord
+# import os
+# from dotenv import load_dotenv
 
 
-def splitMessage(mes: str):
-    mes_list = []
+# def checkMemberStatus(member):
+#     status = "desktop" #default status
+#     if member.raw_status == nextcord.Status.offline:
+#         status = "desktop"
+#     elif member.desktop_status != nextcord.Status.offline:
+#         status = "desktop"
+#     elif member.is_on_mobile() == True:
+#         status = "mobile"
+#     elif member.web_status != nextcord.Status.offline:
+#         status = "web"
 
-    while(len(mes) > 2000):
-       pos = mes.rfind("\n",0,2000)
-       if mes[0:pos].count("```")%2 == 0: 
-        mes_list.append(mes[0:pos])
-        mes = mes[pos:]
-       else:
-        pos = mes.rfind("\n",0,pos-1)
-        if mes[0:pos].count("```")%2 == 0:
-            mes_list.append(mes[0:pos])
-            mes = mes[pos:] 
-        else:
-            mes_list.append(mes[0:pos]+"```")
-            mes = "```fix\n" + mes[pos:]
+#     return status
 
-    mes_list.append(mes)
+# def splitMessage(mes: str):
+#     mes_list = []
 
-    return mes_list
+#     while(len(mes) > 2000):
+#        pos = mes.rfind("\n",0,2000)
+#        if mes[0:pos].count("```")%2 == 0: 
+#         mes_list.append(mes[0:pos])
+#         mes = mes[pos:]
+#        else:
+#         pos = mes.rfind("\n",0,pos-1)
+#         if mes[0:pos].count("```")%2 == 0:
+#             mes_list.append(mes[0:pos])
+#             mes = mes[pos:] 
+#         else:
+#             mes_list.append(mes[0:pos]+"```")
+#             mes = "```fix\n" + mes[pos:]
 
-load_dotenv()
+#     mes_list.append(mes)
 
-qH = questionHandler()
+#     return mes_list
 
-intents = nextcord.Intents.default()
-intents.members = True
-intents.message_content = True
+# load_dotenv()
 
-bot = commands.Bot(command_prefix='!',description="Sage has all the answers ", intents = intents)
+# qH = questionHandler()
 
-@bot.command()
-async def dndspell(ctx):
-    reply_s = qH.handleQuestion(ctx.message.content)
+# intents = nextcord.Intents.default()
+# intents.members = True
+# intents.message_content = True
+# intents.presences = True
 
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+# bot = commands.Bot(command_prefix='!',description="Sage has all the answers ", intents = intents, help_command=None)
 
-@bot.command()
-async def dndrace(ctx):
-    reply_s = qH.handleQuestion(ctx.message.content)
+# @bot.command()
+# async def dndspell(ctx):
+#     reply_s = qH.handleQuestion(ctx.message.content)
 
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+#     if(len(reply_s) <= 2000):
+#          await ctx.reply(reply_s)
+#     else:
+#         splited_mes = splitMessage(reply_s)
+#         for s in splited_mes:
+#             await ctx.send(s)
 
-@bot.command()
-async def dndbackground(ctx):
-    reply_s = qH.handleQuestion(ctx.message.content)
+# @bot.command()
+# async def dndrace(ctx):
+#     reply_s = qH.handleQuestion(ctx.message.content)
 
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+#     if(len(reply_s) <= 2000):
+#          await ctx.reply(reply_s)
+#     else:
+#         splited_mes = splitMessage(reply_s)
+#         for s in splited_mes:
+#             await ctx.send(s)
 
-@bot.command()
-async def dndfeat(ctx):
-    reply_s = qH.handleQuestion(ctx.message.content)
+# @bot.command()
+# async def dndbackground(ctx):
+#     reply_s = qH.handleQuestion(ctx.message.content)
 
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+#     if(len(reply_s) <= 2000):
+#          await ctx.reply(reply_s)
+#     else:
+#         splited_mes = splitMessage(reply_s)
+#         for s in splited_mes:
+#             await ctx.send(s)
 
-@bot.command()
-async def dndclass(ctx):
-    reply_s = qH.handleQuestion(ctx.message.content)
+# @bot.command()
+# async def dndfeat(ctx):
+#     reply_s = qH.handleQuestion(ctx.message.content)
 
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+#     if(len(reply_s) <= 2000):
+#          await ctx.reply(reply_s)
+#     else:
+#         splited_mes = splitMessage(reply_s)
+#         for s in splited_mes:
+#             await ctx.send(s)
 
-@bot.command()
-async def dndsage(ctx):
-    reply_s = qH.handleQuestion(ctx.message.content)
+# @bot.command()
+# async def dndclass(ctx):
+#     reply_s = qH.handleQuestion(ctx.message.content)
 
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+#     if(len(reply_s) <= 2000):
+#          await ctx.reply(reply_s)
+#     else:
+#         splited_mes = splitMessage(reply_s)
+#         for s in splited_mes:
+#             await ctx.send(s)
 
-@bot.command()
-async def dndhelp(ctx):
-    reply_s = qH.handleQuestion(ctx.message.content)
+# @bot.command()
+# async def dndsage(ctx):
+#     reply_s = qH.handleQuestion(ctx.message.content)
 
-    if(len(reply_s) <= 2000):
-         await ctx.reply(reply_s)
-    else:
-        splited_mes = splitMessage(reply_s)
-        for s in splited_mes:
-            await ctx.send(s)
+#     if(len(reply_s) <= 2000):
+#          await ctx.reply(reply_s)
+#     else:
+#         splited_mes = splitMessage(reply_s)
+#         for s in splited_mes:
+#             await ctx.send(s)
 
-bot.run(os.getenv('TOKEN'))
+# @bot.command()
+# async def dndhelp(ctx):
+#     reply_s = qH.handleQuestion(ctx.message.content)
+
+#     if(len(reply_s) <= 2000):
+#          await ctx.reply(reply_s)
+#     else:
+#         splited_mes = splitMessage(reply_s)
+#         for s in splited_mes:
+#             await ctx.send(s)
+
+# bot.run(os.getenv('TOKEN'))

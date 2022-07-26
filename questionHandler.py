@@ -1,14 +1,13 @@
+import sage
 from xmlrpc.client import boolean
-from sage import Sage
 
-class questionHandler:
+class QuestionHandler:
 
     def __init__(self):
         pass
 
-
-    def handleQuestion(self, question : str):
-        s = Sage()      
+    def handleQuestion(self, question : str, clientStatus : str):
+        s = sage.Sage(clientStatus)      
         question = question.lower()
         interpretedQuestion = self.interpreteQuestions(question) 
 

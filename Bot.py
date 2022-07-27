@@ -16,7 +16,7 @@ class BotSage(commands.Bot):
         intents.members = True
         intents.message_content = True
         intents.presences = True
-        super().__init__(command_prefix=commands.when_mentioned_or('!'), intents = intents, help_command=None)
+        super().__init__(command_prefix=commands.when_mentioned_or('?'), intents = intents, help_command=None)
         self.qH = questionHandler.QuestionHandler()
 
     @staticmethod
@@ -76,31 +76,31 @@ bot = BotSage()
 
 ####=============================ASYNC COMMANDS DEF====================================#####
 @bot.command()
-async def dndspell(ctx):
+async def spell(ctx):
     await bot.commandToMessage(ctx, BotSage.commandType[0])
 
 @bot.command()
-async def dndrace(ctx):   
+async def race(ctx):   
     await bot.commandToMessage(ctx,BotSage.commandType[3])
 
 @bot.command()
-async def dndbackground(ctx):
+async def background(ctx):
     await bot.commandToMessage(ctx,BotSage.commandType[2])
 
 @bot.command()
-async def dndfeat(ctx):
+async def feat(ctx):
     await bot.commandToMessage(ctx,BotSage.commandType[5])
 
 @bot.command()
-async def dndclass(ctx):
+async def classes(ctx):
     await bot.commandToMessage(ctx,BotSage.commandType[4])
 
 @bot.command()
-async def dndsage(ctx):
+async def sage(ctx):
     await bot.commandToMessage(ctx,BotSage.commandType[1])
 
 @bot.command()
-async def dndhelp(ctx):
+async def help(ctx):
     await bot.commandToMessage(ctx,BotSage.commandType[6])
 
 ####===============================RUN METHOD==================================#####

@@ -74,6 +74,10 @@ class Sage:
     def findOccuernces(self, phrase:str, source_str:str) -> List[str]:
         findingsList = []
         anchor = '<h'
+
+        source_body = self.cutOutPortion(source_str)
+        source_str = "<h>" + self.getTitle(source_str) + "<h>" + source_body
+
         positionsFound = re.finditer(phrase,source_str,re.I)        
         
         pF_Copy = re.finditer(phrase,source_str,re.I)

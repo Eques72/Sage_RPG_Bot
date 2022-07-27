@@ -5,31 +5,33 @@ Topic it covers include: rules, items, classes and features, races, spells, back
 Write any of these commands below to ask your wise Sage a question about D&D mechanics
 
 COMMANDS:
-"!dndhelp" - command used to show this panel
-"!dndsage       <any phrase you want to search for> <optional flags>" - see more below 
-"!dndclass      <class name>                        <optional flags>"
-"!dndrace       <race name>                         <optional flags>"
-"!dndspell      <spell name> "
-"!dndfeat       <feat name> "
-"!dndbackground <background name> "
+Before command use prefix "?" or mention a bot by typing @Sage RPG
+
+"help"      - command used to show this panel
+"sage       <any phrase you want to search for> <optional flags>" - see more below 
+"classes    <class name>                        <optional flags>"
+"race       <race name>                         <optional flags>"
+"spell      <spell name> "
+"feat       <feat name> "
+"background <background name> "
 
 ARGUMENTS:
 Instead of brackets in list above enter according phrases you wish to see. 
-Eg: Instead of: !dndfeat <feat name> write !dndfeat Chef or !dndfeat chef or any feat name, do similar with other commands
+Eg: Instead of: feat <feat name> write ?feat Chef or @Sage RPG feat chef or any feat name, do similar with other commands
 
-!DNDSAGE:
+?SAGE:
 Unique and universal command, it has the ability to find answers for most of your questios, but there is bigger chance that it will take sligthly longer to execute. In opposition to other commands you can make misspell mistakes.
-Eg: !dndsage tiefling Eg2: !dndsage armor -f shield Eg3: !dndsage fight -f mounting
+Eg: ?sage tiefling Eg2: @Sage RPG sage armor -f shield Eg3: ?sage fight -f mounting
 
 FLAGS:
 If command has <optional flags> argument you can use flags bellow:
 
-"-s <phrase>" - use this flag with !dndclass only, lets you see certain subclass/maneuvers/invocations, 
+"-s <phrase>" - use this flag with ?classes only, lets you see certain subclass/maneuvers/invocations, 
 depending on phrase you have given. 
-Eg: !dndclass rogue -s arcane trickster | It will show you info about rogue subclass - arcane trickster
+Eg: ?classes rogue -s arcane trickster | It will show you info about rogue subclass - arcane trickster
 
 "-f <phrase>" - use with any command where optional flags are available, bot will look for phrase you have given
  and will display only this content that is relevant to this phrase. 
- Eg: !dndsage elf -f wood elf | It will show you only information about wood elf, not whole elf race. 
- Eg2: !dndsage paladin -f divine smite | It will show you only Divine Smite feature, not whole paladin class]
+ Eg: ?sage elf -f wood elf | It will show you only information about wood elf, not whole elf race. 
+ Eg2: ?sage paladin -f divine smite | It will show you only Divine Smite feature, not whole paladin class]
  ```
